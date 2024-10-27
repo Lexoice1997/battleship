@@ -2,6 +2,7 @@ import { config } from "dotenv"
 import { type IncomingMessage } from "http"
 import process from "node:process"
 import { Server, type WebSocket as WSWebSocket } from "ws"
+import { regController } from "../controllers/reg-controller"
 import { IncomingMessageModel } from "../helpers/models/incoming-message.model"
 
 config()
@@ -19,20 +20,19 @@ const startWebsocketServer = () => {
 }
 
 const handleConnectionWS = (ws: WSWebSocket, req: IncomingMessage): void => {
-  console.log("start")
   ws.on("close", () => {})
 
   ws.on("message", (message: Buffer) => {
     try {
       const incomingClientMessage: IncomingMessageModel = JSON.parse(message.toString("utf8"))
-      incomingClientMessageHandler(ws, incomingClientMessage)
+      clientMessageHandler(ws, incomingClientMessage)
     } catch (error) {
       console.log(error)
     }
   })
 }
 
-const incomingClientMessageHandler = (
+const clientMessageHandler = (
   ws: WSWebSocket,
   incomingClientMessage: IncomingMessageModel
 ): void => {
@@ -40,7 +40,7 @@ const incomingClientMessageHandler = (
 
   switch (incomingClientMessage.type) {
     case "reg": {
-      //   regHandler(ws, incomingClientMessage, wsKey)
+      regController(ws, incomingClientMessage)
       break
     }
     case "create_room": {
