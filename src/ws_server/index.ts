@@ -2,7 +2,10 @@ import { config } from "dotenv"
 import { type IncomingMessage } from "http"
 import process from "node:process"
 import { Server, type WebSocket as WSWebSocket } from "ws"
-import { regController } from "../controllers/reg-controller"
+
+import { addToRoomController } from "../controllers/add-to-room.controller"
+import { createRoomController } from "../controllers/create-room.controller"
+import { regController } from "../controllers/reg.controller"
 import { IncomingMessageModel } from "../helpers/models/incoming-message.model"
 
 config()
@@ -44,9 +47,11 @@ const clientMessageHandler = (
       break
     }
     case "create_room": {
+      createRoomController(ws)
       break
     }
     case "add_user_to_room": {
+      addToRoomController(ws, incomingClientMessage)
       break
     }
     case "add_ships": {

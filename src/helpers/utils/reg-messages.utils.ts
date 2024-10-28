@@ -7,9 +7,17 @@ export function createResponse<T>(
   error: boolean,
   errorText: string
 ): RegResponse {
+  if (error) {
+    return {
+      type: type,
+      data: JSON.stringify({ error, errorText, ...data }),
+      id: 0,
+    }
+  }
+
   return {
     type: type,
-    data: JSON.stringify({ error, errorText, ...data }),
+    data: JSON.stringify(data),
     id: 0,
   }
 }
