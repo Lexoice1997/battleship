@@ -12,6 +12,7 @@
     "keywords": [],
     "license": "ISC",
     "devDependencies": {
+        "@types/uuid": "^10.0.0",
         "@types/ws": "^8.5.12",
         "nodemon": "^2.0.16",
         "ts-loader": "^9.5.1",
@@ -23,6 +24,7 @@
     },
     "dependencies": {
         "dotenv": "^16.4.5",
+        "uuid": "^10.0.0",
         "ws": "^8.8.0"
     }
 }
