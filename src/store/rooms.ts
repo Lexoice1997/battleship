@@ -12,11 +12,18 @@ class RoomsClass {
     const newRoom: RoomModel = {
       roomId: uuidv4(),
       roomUsers: [{ name: me!.name, index: me!.id }],
+      isStarted: false,
     }
 
     this.rooms.push(newRoom)
 
+
     return newRoom
+  }
+
+  get(indexRoom: string) {
+    const currentRoom = this.getRooms.find((room) => room.roomId === indexRoom)
+    return currentRoom
   }
 
   get getRooms() {
@@ -24,11 +31,13 @@ class RoomsClass {
   }
 
   addUserToRoom(indexRoom: string) {
-    const currentRoom = this.getRooms.find((room) => room.roomId === indexRoom)
+    const currentRoom = this.get(indexRoom)
     const me = players.meInfo
     const isAddToRoom = currentRoom?.roomUsers?.every((player) => player.index !== me?.id)
 
     if (isAddToRoom) {
+      currentRoom?.roomUsers.push({ name: me?.name!, index: me?.id! })
+      this.rooms = [...this.rooms, currentRoom!]
     }
   }
 }

@@ -1,4 +1,5 @@
 import { type WebSocket as WSWebSocket } from "ws"
+
 import { RegResponse } from "../models/reg-response.model"
 
 export function createResponse<T>(
