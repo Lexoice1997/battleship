@@ -2,11 +2,15 @@ import { config } from "dotenv"
 import { type IncomingMessage } from "http"
 import process from "node:process"
 import { Server, type WebSocket as WSWebSocket } from "ws"
+
+import { regController } from "../controllers/reg.controller"
+import { addToRoomController, createRoomController } from "../controllers/room.controller"
 import { IncomingMessageModel } from "../helpers/models/incoming-message.model"
 
 config()
 
 const WS_PORT = Number(process.env.WS_PORT) || 3000
+let clientId = 0
 
 const startWebsocketServer = () => {
   const websocketServer = new Server({ port: WS_PORT })
@@ -19,34 +23,37 @@ const startWebsocketServer = () => {
 }
 
 const handleConnectionWS = (ws: WSWebSocket, req: IncomingMessage): void => {
-  console.log("start")
+  let newClientId = `${clientId++}`
   ws.on("close", () => {})
 
   ws.on("message", (message: Buffer) => {
     try {
       const incomingClientMessage: IncomingMessageModel = JSON.parse(message.toString("utf8"))
-      incomingClientMessageHandler(ws, incomingClientMessage)
+      clientMessageHandler(ws, incomingClientMessage, newClientId)
     } catch (error) {
       console.log(error)
     }
   })
 }
 
-const incomingClientMessageHandler = (
+const clientMessageHandler = (
   ws: WSWebSocket,
-  incomingClientMessage: IncomingMessageModel
+  incomingClientMessage: IncomingMessageModel,
+  clientId: string
 ): void => {
   console.log(incomingClientMessage.type)
 
   switch (incomingClientMessage.type) {
     case "reg": {
-      //   regHandler(ws, incomingClientMessage, wsKey)
+      regController(ws, incomingClientMessage)
       break
     }
     case "create_room": {
+      createRoomController(ws)
       break
     }
     case "add_user_to_room": {
+      addToRoomController(ws, incomingClientMessage)
       break
     }
     case "add_ships": {
